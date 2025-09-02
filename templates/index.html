@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pie Chart with ECharts</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- ECharts CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+</head>
+<body>
+    <h1 class="title">Fruit Distribution</h1>
+    <div id="piechart"></div>
+
+    <script>
+        async function loadChart() {
+            const response = await fetch("/data");
+            const chartData = await response.json();
+
+            const chartDom = document.getElementById('piechart');
+            const myChart = echarts.init(chartDom);
+
+            const option = {
+                backgroundColor: '#ffffff', // white background
+                tooltip: { trigger: 'item' },
+                series: [
+                    {
+                        name: 'Fruits',
+                        type: 'pie',
+                        radius: '65%',
+                        label: {
+                            color: '#000', // black text inside
+                            formatter: '{b}: {d}%',
+                            fontSize: 14
+                        },
+                        labelLine: {
+                            show: true,
+                            lineStyle: { color: '#555' }, // soft grey lines
+                            length: 20,
+                            length2: 15
+                        },
+                        itemStyle: {
+                            borderColor: '#ffffff',
+                            borderWidth: 2
+                        },
+                        data: chartData.map((d, i) => ({
+                            name: d.name,
+                            value: d.value,
+                            itemStyle: {
+                                color: [
+                                    'rgba(135, 206, 250, 0.6)', // sky blue
+                                    'rgba(144, 238, 144, 0.6)', // light green
+                                    'rgba(255, 182, 193, 0.6)', // pink
+                                    'rgba(255, 255, 224, 0.6)', // light yellow
+                                    'rgba(221, 160, 221, 0.6)'  // plum
+                                ][i % 5]
+                            }
+                        }))
+                    }
+                ]
+            };
+
+            myChart.setOption(option);
+        }
+
+        loadChart();
+    </script>
+</body>
+</html>
