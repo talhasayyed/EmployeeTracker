@@ -2,114 +2,128 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Line + Pie Combo Chart</title>
+  <title>Combo Chart with Loader</title>
   <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
   <style>
     body {
       background: #fff;
       font-family: "Segoe UI", sans-serif;
-      margin: 0;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      margin: 0;
     }
+
+    /* Chart container */
     #combochart {
-      width: 1000px;
+      width: 800px;
       height: 600px;
+      display: none; /* hidden until chart loads */
+    }
+
+    /* Skeleton Loader */
+    .skeleton {
+      width: 800px;
+      height: 600px;
+      background: linear-gradient(
+        90deg,
+        #f0f0f0 25%,
+        #e0e0e0 37%,
+        #f0f0f0 63%
+      );
+      background-size: 400% 100%;
+      animation: shimmer 1.2s infinite;
+      border-radius: 12px;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -400px 0; }
+      100% { background-position: 400px 0; }
     }
   </style>
 </head>
 <body>
+  <h1>Combo Chart</h1>
+
+  <!-- Skeleton placeholder -->
+  <div id="loader" class="skeleton"></div>
+
+  <!-- Chart -->
   <div id="combochart"></div>
 
   <script>
-    const chartDom = document.getElementById('combochart');
-    const myChart = echarts.init(chartDom);
+    async function loadChart() {
+      const response = await fetch("/data");
+      const chartData = await response.json();
 
-    setTimeout(function () {
+      const chartDom = document.getElementById("combochart");
+      const myChart = echarts.init(chartDom);
+
+      // Example combo chart (line + pie)
       const option = {
         legend: {},
         tooltip: {
-          trigger: 'axis',
+          trigger: "axis",
           showContent: false
         },
         dataset: {
           source: [
-            ['product', '2012', '2013', '2014', '2015', '2016', '2017'],
-            ['Milk Tea', 56.5, 82.1, 88.7, 70.1, 53.4, 85.1],
-            ['Matcha Latte', 51.1, 51.4, 55.1, 53.3, 73.8, 68.7],
-            ['Cheese Cocoa', 40.1, 62.2, 69.5, 36.4, 45.2, 32.5],
-            ['Walnut Brownie', 25.2, 37.1, 41.2, 18.0, 33.9, 49.1]
+            ["product", "2012", "2013", "2014", "2015", "2016", "2017"],
+            ["Milk Tea", 56.5, 82.1, 88.7, 70.1, 53.4, 85.1],
+            ["Matcha Latte", 51.1, 51.4, 55.1, 53.3, 73.8, 68.7],
+            ["Cheese Cocoa", 40.1, 62.2, 69.5, 36.4, 45.2, 32.5],
+            ["Walnut Brownie", 25.2, 37.1, 41.2, 18.0, 33.9, 49.1]
           ]
         },
-        xAxis: { type: 'category' },
+        xAxis: { type: "category" },
         yAxis: { gridIndex: 0 },
-        grid: { top: '55%' },
+        grid: { top: "55%" },
         series: [
+          { type: "line", smooth: true, seriesLayoutBy: "row", emphasis: { focus: "series" } },
+          { type: "line", smooth: true, seriesLayoutBy: "row", emphasis: { focus: "series" } },
+          { type: "line", smooth: true, seriesLayoutBy: "row", emphasis: { focus: "series" } },
+          { type: "line", smooth: true, seriesLayoutBy: "row", emphasis: { focus: "series" } },
           {
-            type: 'line',
-            smooth: true,
-            seriesLayoutBy: 'row',
-            emphasis: { focus: 'series' }
-          },
-          {
-            type: 'line',
-            smooth: true,
-            seriesLayoutBy: 'row',
-            emphasis: { focus: 'series' }
-          },
-          {
-            type: 'line',
-            smooth: true,
-            seriesLayoutBy: 'row',
-            emphasis: { focus: 'series' }
-          },
-          {
-            type: 'line',
-            smooth: true,
-            seriesLayoutBy: 'row',
-            emphasis: { focus: 'series' }
-          },
-          {
-            type: 'pie',
-            id: 'pie',
-            radius: '30%',
-            center: ['50%', '25%'],
-            emphasis: { focus: 'self' },
-            label: {
-              formatter: '{b}: {@2012} ({d}%)'
-            },
+            type: "pie",
+            id: "pie",
+            radius: "30%",
+            center: ["50%", "25%"],
+            emphasis: { focus: "self" },
+            label: { formatter: "{b}: {@2012} ({d}%)" },
             encode: {
-              itemName: 'product',
-              value: '2012',
-              tooltip: '2012'
+              itemName: "product",
+              value: "2012",
+              tooltip: "2012"
             }
           }
         ]
       };
 
-      myChart.on('updateAxisPointer', function (event) {
+      myChart.on("updateAxisPointer", function (event) {
         const xAxisInfo = event.axesInfo[0];
         if (xAxisInfo) {
           const dimension = xAxisInfo.value + 1;
           myChart.setOption({
             series: {
-              id: 'pie',
-              label: {
-                formatter: '{b}: {@[' + dimension + ']} ({d}%)'
-              },
-              encode: {
-                value: dimension,
-                tooltip: dimension
-              }
+              id: "pie",
+              label: { formatter: "{b}: {@[" + dimension + "]} ({d}%)" },
+              encode: { value: dimension, tooltip: dimension }
             }
           });
         }
       });
 
       myChart.setOption(option);
-    });
+
+      // Hide skeleton, show chart
+      document.getElementById("loader").style.display = "none";
+      chartDom.style.display = "block";
+    }
+
+    // Simulate loading delay
+    setTimeout(loadChart, 1500);
   </script>
 </body>
 </html>
