@@ -1,68 +1,39 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pie Chart with ECharts</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <!-- ECharts CDN -->
     <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+
+    <script src="{{ url_for('static', filename='js/pie.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/combo_pie.js') }}"></script>
+
 </head>
 <body>
-    <h1 class="title">Fruit Distribution</h1>
-    <div id="piechart"></div>
+    <div class="parent">
+        <div class="div1 card">
+            <!-- <div class="card"> -->
+                <div id="piechart1"></div>
+            <!-- </div> -->
+        </div>
 
-    <script>
-        async function loadChart() {
-            const response = await fetch("/data1");
-            const chartData = await response.json();
+        <div class="div2 card">
+            <!-- <div class="card"> -->
+                <div id="piechart2"></div>
+            <!-- </div> -->
+        </div>
 
-            const chartDom = document.getElementById('piechart');
-            const myChart = echarts.init(chartDom);
-
-            const option = {
-                backgroundColor: '#ffffff', // white background
-                tooltip: { trigger: 'item' },
-                series: [
-                    {
-                        name: 'Fruits',
-                        type: 'pie',
-                        radius: '65%',
-                        label: {
-                            color: '#000', // black text inside
-                            formatter: '{b}: {d}%',
-                            fontSize: 14
-                        },
-                        labelLine: {
-                            show: true,
-                            lineStyle: { color: '#555' }, // soft grey lines
-                            length: 20,
-                            length2: 15
-                        },
-                        itemStyle: {
-                            borderColor: '#ffffff',
-                            borderWidth: 2
-                        },
-                        data: chartData.map((d, i) => ({
-                            name: d.name,
-                            value: d.value,
-                            itemStyle: {
-                                color: [
-                                    'rgba(135, 206, 250, 0.6)', // sky blue
-                                    'rgba(144, 238, 144, 0.6)', // light green
-                                    'rgba(255, 182, 193, 0.6)', // pink
-                                    'rgba(255, 255, 224, 0.6)', // light yellow
-                                    'rgba(221, 160, 221, 0.6)'  // plum
-                                ][i % 5]
-                            }
-                        }))
-                    }
-                ]
-            };
-
-            myChart.setOption(option);
-        }
-
-        loadChart();
-    </script>
+        <div class="div3 card">
+            <!-- <div class="card"> -->
+                <h2>Beverage Sales Over Years</h2>
+                <div id="combochart"></div>
+            <!-- </div> -->
+        </div>
+    </div>
 </body>
 </html>

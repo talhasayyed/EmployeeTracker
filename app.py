@@ -18,8 +18,8 @@ def combo_chart():
 def pie_only():
     return render_template("pie_only.html")
 
-@app.route("/data1")
-def get_data1():
+@app.route("/pie_data")
+def get_pie_data():
     # Dummy data for pie chart
     data = [
         {"name": "Apples", "value": 25},
@@ -31,7 +31,7 @@ def get_data1():
     return jsonify(data)
 
 
-@app.route("/data")
+@app.route("/line_pie_data")
 def get_data():
     dataset = [
         ["product", "2012", "2013", "2014", "2015", "2016", "2017"],
