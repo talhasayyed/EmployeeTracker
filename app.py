@@ -27,7 +27,7 @@ def get_pie_data():
         {"name": "sj", "value": 20},
         {"name": "deepak", "value": 15},
         {"name": "vivek", "value": 10},
-        {"name": "Elderberries", "value": 20}
+        {"name": "rachan", "value": 20}
     ]
     return jsonify(data)
 

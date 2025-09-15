@@ -1,1 +1,5 @@
 ignore
+t1.py
+test.py
+ttt.py
+*.csv
